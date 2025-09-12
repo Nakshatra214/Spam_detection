@@ -1,0 +1,10 @@
+{
+  "optimal_threshold": 0.07,
+  "best_f1": 0.7241379310344828,
+  "roc_auc": 0.9823603946058467,
+  "previous_threshold": 0.05,
+  "manual_adjustment": true,
+  "adjustment_reason": "Improved fraud detection recall",
+  "optimization_type": "balanced_f1",
+  "balance_reason": "Optimized for fraud detection with minimal false positives"
+}

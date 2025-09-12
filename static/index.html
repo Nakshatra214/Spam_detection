@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detector - Modern UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+            color: #2c3e50;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+            background: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            min-height: 54px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            box-shadow: 0 4px 16px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #545b62);
+            color: white;
+            box-shadow: 0 4px 16px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #545b62, #3d4449);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #a71e2a);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(220, 53, 69, 0.4);
+        }
+
+        .status-message {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .status-info {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+            animation: slideDown 0.5s ease;
+            box-shadow: 0 4px 16px rgba(238, 90, 36, 0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            display: none;
+            border-left: 4px solid #007bff;
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .result-item {
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 140px;
+        }
+
+        .result-value {
+            flex: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            margin: 0.2rem 0.1rem;
+            background: #e9ecef;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.05);
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #f8d7da, #fab1a0);
+            color: #721c24;
+        }
+
+        .alerts-section {
+            margin-top: 3rem;
+        }
+
+        .alerts-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .alerts-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .alerts-count {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .alerts-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 12px;
+            background: white;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .alerts-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .alerts-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .alerts-container::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 4px;
+        }
+
+        .alert-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        .alert-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            border-color: #007bff;
+        }
+
+        .alert-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .alert-text {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-wrap: break-word;
+            border-left: 3px solid #007bff;
+        }
+
+        .live-transcript {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 1px solid #bbdefb;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #1565c0;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .alerts-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .alert-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .result-label {
+                min-width: auto;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .textarea {
+                min-height: 120px;
+            }
+
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-flash {
+            animation: successFlash 0.8s ease;
+        }
+
+        @keyframes successFlash {
+            0% { background-color: #d4edda; }
+            50% { background-color: #c3e6cb; }
+            100% { background-color: #d4edda; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🛡️ Spam Detector</h1>
+            <p>Advanced fraud and spam detection powered by AI</p>
+        </div>
+
+        <!-- Alert Banner -->
+        <div id="alertBanner" class="alert-banner">
+            ⚠️ Potential fraud detected! Please verify identity and avoid sharing sensitive information.
+        </div>
+
+        <!-- Input Section -->
+        <div class="card">
+            <div class="input-section">
+                <label for="textInput" class="input-label">📝 Enter text or transcript for analysis:</label>
+                <textarea 
+                    id="textInput" 
+                    class="textarea" 
+                    placeholder="Paste email, chat transcript, or any suspicious text here for instant analysis..."
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="analyzeBtn" class="btn btn-primary">
+                    🔍 Analyze Text
+                </button>
+                <button id="micBtn" class="btn btn-secondary">
+                    🎤 Start Microphone
+                </button>
+                <button id="clearBtn" class="btn btn-danger">
+                    🗑️ Clear Database
+                </button>
+            </div>
+
+            <div id="statusMessage" class="status-message"></div>
+            <div id="liveTranscript" class="live-transcript" style="display: none;"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultCard" class="result-card">
+            <div class="result-title">📊 Analysis Results</div>
+            <div id="resultContent"></div>
+        </div>
+
+        <!-- Recent Alerts Section -->
+        <div class="alerts-section">
+            <div class="alerts-header">
+                <h2 class="alerts-title">🚨 Recent Alerts</h2>
+                <span id="alertsCount" class="alerts-count" style="display: none;">0</span>
+            </div>
+            <div class="alerts-container">
+                <div id="alertsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No alerts yet. Analyze some text to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for notifications -->
+    <audio id="alertSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAaW5mbyBiaXoAAAAA" type="audio/wav" />
+    </audio>
+
+    <script>
+        // DOM Elements
+        const textInput = document.getElementById('textInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const micBtn = document.getElementById('micBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const liveTranscript = document.getElementById('liveTranscript');
+        const alertBanner = document.getElementById('alertBanner');
+        const resultCard = document.getElementById('resultCard');
+        const resultContent = document.getElementById('resultContent');
+        const alertsList = document.getElementById('alertsList');
+        const alertsCount = document.getElementById('alertsCount');
+        const alertSound = document.getElementById('alertSound');
+
+        // Speech Recognition Variables
+        let recognition;
+        let isRecognizing = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAlerts();
+            setupSpeechRecognition();
+            
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().catch(() => {});
+            }
+        });
+
+        // Status Message Helper
+        function showStatus(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message status-${type}`;
+            
+            if (type === 'success') {
+                statusMessage.classList.add('success-flash');
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                    statusMessage.className = 'status-message';
+                    statusMessage.classList.remove('success-flash');
+                }, 3000);
+            }
+        }
+
+        // Load Alerts
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/alerts');
+                const alerts = await response.json();
+                
+                alertsCount.textContent = alerts.length;
+                alertsCount.style.display = alerts.length > 0 ? 'inline' : 'none';
+                
+                if (alerts.length === 0) {
+                    alertsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>No alerts yet. Analyze some text to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                alertsList.innerHTML = alerts.slice(-10).reverse().map(alert => `
+                    <div class="alert-card fade-in">
+                        <div class="alert-meta">
+                            <span><strong>🎯 Severity:</strong> ${alert.severity || 0}</span>
+                            <span><strong>📈 Probability:</strong> ${(alert.probability_fraud * 100).toFixed(1)}%</span>
+                            <span><strong>🕐 Time:</strong> ${new Date().toLocaleTimeString()}</span>
+                        </div>
+                        <div class="alert-text">${(alert.text || '').slice(0, 250)}${alert.text && alert.text.length > 250 ? '...' : ''}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load alerts:', error);
+                showStatus('Failed to load alerts', 'error');
+            }
+        }
+
+        // Analyze Text
+        async function analyzeText() {
+            const text = textInput.value.trim();
+            if (!text) {
+                showStatus('⚠️ Please enter some text to analyze', 'error');
+                textInput.focus();
+                return;
+            }
+
+            showStatus('🔄 Analyzing text...', 'info');
+            resultCard.style.display = 'none';
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '⏳ Analyzing...';
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                showStatus('✅ Analysis complete!', 'success');
+                displayResults(data);
+                loadAlerts();
+                
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '🔍 Analyze Text';
+            }
+        }
+
+        // Display Results
+        function displayResults(data) {
+            const isSpam = data.label === 1;
+            const probability = (data.probability_fraud * 100).toFixed(1);
+            
+            // Show alert banner if spam detected
+            if (data.alert) {
+                alertBanner.style.display = 'block';
+                try {
+                    alertSound.play().catch(() => {});
+                } catch (e) {}
+                
+                // Browser notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('🚨 Potential Fraud Detected', {
+                        body: `Severity: ${data.severity}, Probability: ${probability}%`,
+                        icon: '🛡️'
+                    });
+                }
+            } else {
+                alertBanner.style.display = 'none';
+            }
+            
+            // Format detection results
+            const urgencyHits = (data.rules?.urgency_hits || []).map(hit => 
+                `<span class="badge badge-warning">${hit}</span>`
+            ).join(' ');
+            
+            const suspiciousHits = (data.rules?.suspicious_hits || []).map(hit => 
+                `<span class="badge badge-danger">${hit}</span>`
+            ).join(' ');
+            
+            const amounts = (data.rules?.amounts || []).map(amount => 
+                `<span class="badge">${amount}</span>`
+            ).join(' ');
+            
+            resultContent.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">🎯 Prediction:</span>
+                    <div class="result-value">
+                        <span class="badge ${isSpam ? 'badge-danger' : 'badge-success'}">
+                            ${isSpam ? '🚨 FRAUD/SPAM' : '✅ LEGITIMATE'}
+                        </span>
+                        <span style="margin-left: 0.5rem; color: #6c757d;">(${probability}% confidence)</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">📊 Severity Score:</span>
+                    <div class="result-value">
+                        <span class="badge ${data.severity >= 8 ? 'badge-danger' : data.severity >= 4 ? 'badge-warning' : 'badge-success'}">
+                            ${data.severity || 0} / 10
+                        </span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">⚡ Urgency Indicators:</span>
+                    <div class="result-value">${urgencyHits || '<span class="badge">None detected</span>'}</div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">🚩 Suspicious Patterns:</span>
+                    <div class="result-value">${suspiciousHits || '<span class="badge">None detected</span>'}</div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">💰 Financial Amounts:</span>
+                    <div class="result-value">${amounts || '<span class="badge">None detected</span>'}</div>
+                </div>
+            `;
+            
+            resultCard.style.display = 'block';
+            resultCard.classList.add('fade-in');
+        }
+
+        // Setup Speech Recognition
+        function setupSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                micBtn.disabled = true;
+                micBtn.innerHTML = '🎤 Not Supported';
+                micBtn.style.opacity = '0.5';
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = async (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                
+                liveTranscript.textContent = `🎙️ Live transcript: ${transcript}`;
+                liveTranscript.style.display = 'block';
+                
+                const isFinal = event.results[event.results.length - 1].isFinal;
+                if (isFinal && transcript.trim()) {
+                    textInput.value = (textInput.value + ' ' + transcript).trim();
+                    
+                    try {
+                        const response = await fetch('/analyze', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ text: transcript })
+                        });
+                        
+                        const data = await response.json();
+                        displayResults(data);
+                        loadAlerts();
+                    } catch (error) {
+                        showStatus(`❌ Error: ${error.message}`, 'error');
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                showStatus(`🎤 Microphone error: ${event.error}`, 'error');
+            };
+
+            recognition.onend = () => {
+                isRecognizing = false;
+                micBtn.innerHTML = '🎤 Start Microphone';
+                micBtn.classList.remove('btn-danger');
+                micBtn.classList.add('btn-secondary');
+                liveTranscript.style.display = 'none';
+            };
+        }
+
+        // Toggle Speech Recognition
+        function toggleSpeechRecognition() {
+            if (!recognition) {
+                showStatus('🎤 Speech recognition not available', 'error');
+                return;
+            }
+
+            if (!isRecognizing) {
+                isRecognizing = true;
+                micBtn.innerHTML = '⏹ Stop Recording';
+                micBtn.classList.remove('btn-secondary');
+                micBtn.classList.add('btn-danger');
+                showStatus('🎙️ Listening... Speak now!', 'info');
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        }
+
+        // Clear Database - Updated to use /alerts endpoint as per existing backend
+        async function clearDatabase() {
+            if (!confirm('🗑️ Are you sure you want to clear all alerts from the database?')) {
+                return;
+            }
+
+            showStatus('🔄 Clearing database...', 'info');
+            clearBtn.disabled = true;
+            clearBtn.innerHTML = '⏳ Clearing...';
+            
+            try {
+                // Using the existing /alerts DELETE endpoint instead of /api/clear
+                const response = await fetch('/alerts', { method: 'DELETE' });
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                showStatus('✅ Database cleared successfully!', 'success');
+                loadAlerts();
+                
+            } catch (error) {
+                showStatus(`❌ Error clearing database: ${error.message}`, 'error');
+            } finally {
+                clearBtn.disabled = false;
+                clearBtn.innerHTML = '🗑️ Clear Database';
+            }
+        }
+
+        // Event Listeners
+        analyzeBtn.addEventListener('click', analyzeText);
+        micBtn.addEventListener('click', toggleSpeechRecognition);
+        clearBtn.addEventListener('click', clearDatabase);
+        
+        // Enter key support for textarea
+        textInput.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 'Enter') {
+                event.preventDefault();
+                analyzeText();
+            }
+        });
+
+        // Auto-resize textarea
+        textInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.max(140, this.scrollHeight) + 'px';
+        });
+
+        // Auto-refresh alerts every 5 seconds
+        setInterval(loadAlerts, 5000);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey) {
+                switch(event.key) {
+                    case 'Enter':
+                        event.preventDefault();
+                        analyzeText();
+                        break;
+                    case 'm':
+                        event.preventDefault();
+                        toggleSpeechRecognition();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
