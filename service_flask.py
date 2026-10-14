@@ -1,6 +1,13 @@
 import json
 import os
+import sys
 import numpy as np
+
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -151,4 +158,5 @@ def analyze():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8000)
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
